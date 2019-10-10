@@ -115,19 +115,16 @@ public class EmployeeController {
 	}
 	
 	@GetMapping(value =  "convert/{convertable}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<EmployeeTo> getRequestConvert(@PathVariable("convertable") String convertable){
+	public List<EmployeeTo> getRequestConvert(@PathVariable("convertable") String convertable) throws JsonParseException, JsonMappingException, IOException{
 		System.out.println("calling to employee service");
 		System.out.println(convertable);
-		/*
-		 * ParserConvertable con=null; try { System.out.println("Converting......");
-		 * con= new ObjectMapper().readValue(obj, ParserConvertable.class);
-		 * System.out.println("Converted"); } catch (JsonParseException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } catch (JsonMappingException
-		 * e) { // TODO Auto-generated catch block e.printStackTrace(); } catch
-		 * (IOException e) { // TODO Auto-generated catch block e.printStackTrace(); }
-		 */
+		convertable=convertable.replaceAll("\\(", "{").replaceAll("\\)", "}");
 		
-		List<EmployeeTo> li=new ArrayList<EmployeeTo>();
+		  Convertable con=null;
+			  con= new ObjectMapper().readValue(convertable, Convertable.class);
+		 
+		  List<EmployeeTo> li=new ArrayList<EmployeeTo>();
+		 li = service.convertEmployeeTo(con.getEmployees(), con.getDepartments(), con.getAddress());
 		 return li;
 	}
 	
