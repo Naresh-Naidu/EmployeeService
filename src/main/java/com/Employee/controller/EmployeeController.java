@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import com.Employee.Model.Department;
 import com.Employee.Model.Employee;
 import com.Employee.Model.EmployeeTo;
 import com.Employee.Model.ParserConvertable;
+import com.Employee.Repository.EmployeeRepository;
 import com.Employee.Sevice.EmployeeSevice;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -45,6 +48,9 @@ public class EmployeeController {
 	
 	@Autowired
 	private RestTemplate template;
+	
+	@Autowired
+	private EmployeeRepository repository;
 	
 	private List<Employee> employeeList=new ArrayList<Employee>();
 	private Set<Employee> employeeSet=null;
@@ -78,10 +84,24 @@ public class EmployeeController {
 	
 	public List<Employee> createEmployees(){
 		employeeList.addAll(Arrays.asList(
-				new Employee(1, "Naresh", 11, 22),
-				new Employee(2, "Ramesh", 11, 23),
-				new Employee(3, "Suresh", 13, 21)
+				new Employee("1", "Naresh", 11, 22),
+				new Employee("2", "Ramesh", 11, 23),
+				new Employee("3", "Suresh", 13, 21)
 				));
+		
+		String uuid = UUID.randomUUID().toString();
+
+        // Create a new User class.
+       Employee testEmployee = new Employee(uuid, "John", 11,21);
+
+        // For this example, remove all of the existing records.
+        //repository.deleteAll();
+
+        // Save the User class to the Azure database.
+        repository.save(testEmployee);
+		
+		List<Employee> result = (List<Employee>) repository.findAll();
+		employeeList.addAll(result);
 		
 		employeeSet=new HashSet<Employee>(employeeList);
 		employeeList.clear();
@@ -120,8 +140,7 @@ public class EmployeeController {
 		System.out.println(convertable);
 		convertable=convertable.replaceAll("\\(", "{").replaceAll("\\)", "}");
 		
-		  Convertable con=null;
-			  con= new ObjectMapper().readValue(convertable, Convertable.class);
+		  Convertable con= new ObjectMapper().readValue(convertable, Convertable.class);
 		 
 		  List<EmployeeTo> li=new ArrayList<EmployeeTo>();
 		 li = service.convertEmployeeTo(con.getEmployees(), con.getDepartments(), con.getAddress());
