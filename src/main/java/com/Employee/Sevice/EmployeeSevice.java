@@ -23,7 +23,7 @@ public class EmployeeSevice {
 			emp.setId(employee.getId());
 			emp.setName(employee.getName());
 			for (Department department : depts) {
-				if(null !=employee.getDeptid() && employee.getDeptid().equals(department.getId())) {
+				if(null !=employee.getDeptid() && employee.getDeptid().equals(Integer.parseInt(department.getId()))) {
 					emp.setDepartment(department.getDeptName());
 					break;
 				}

@@ -89,16 +89,9 @@ public class EmployeeController {
 				new Employee("3", "Suresh", 13, 21)
 				));
 		
-		String uuid = UUID.randomUUID().toString();
-
-        // Create a new User class.
-       Employee testEmployee = new Employee(uuid, "John", 11,21);
-
-        // For this example, remove all of the existing records.
-        //repository.deleteAll();
-
-        // Save the User class to the Azure database.
-        repository.save(testEmployee);
+		for (Employee employee : employeeList) {
+			repository.save(employee);
+		}
 		
 		List<Employee> result = (List<Employee>) repository.findAll();
 		employeeList.addAll(result);
@@ -149,14 +142,14 @@ public class EmployeeController {
 	
 	@GetMapping("employeeByDept/{deptid}")
 	public List<Employee> getEmployeesBYdept(
-			@PathVariable("deptid") Integer deptid
+			@PathVariable("deptid") String deptid
 			) {
 		//Integer deptId=Integer.parseInt(deptid);
 		//template.exchange("http://employee-Service/getAllEmployee", HttpMethod.GET, null, new ParameterizedTypeReference<List<EmployeeTo>>() {});
 		getAllEmployee();
 		List<Employee> empList=new ArrayList<Employee>();
 		for (Employee employee : employeeList) {
-			if(employee.getDeptid().equals(deptid)) {
+			if(employee.getDeptid().equals(Integer.parseInt(deptid))) {
 				empList.add(employee);
 			}
 		}
