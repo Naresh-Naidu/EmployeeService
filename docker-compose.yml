@@ -1,0 +1,62 @@
+version: '2.2'
+services:
+    eureka-server:
+        container_name: eureka-server
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: discoverdocker:1.1
+        expose:
+            - 8761
+        ports:
+            - 8761:8761
+        
+    EmployeeService:
+        container_name: EmployeeService
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: employeeservice:1.1
+        
+        expose:
+            - 8882
+        ports:
+            - 8882:8882
+        links:
+             - eureka-server:eureka-server
+        depends_on:
+            - eureka-server
+    DepartmentService:
+        container_name: DepartmentService
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: departmentservice:1.1
+        
+        expose:
+            - 8880
+        ports:
+            - 8880:8880
+        links:
+             - eureka-server:eureka-server
+        depends_on:
+            - eureka-server
+    AddressService:
+        container_name: AddressService
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: address-service:1.4
+        
+        expose:
+            - 8881
+        ports:
+            - 8881:8881
+        links:
+             - eureka-server:eureka-server
+        depends_on:
+            - eureka-server
+        logging:
+            driver: json-file
+
+

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,13 +60,13 @@ public class EmployeeController {
 	public List<EmployeeTo> getAllEmployee(){
 		//List<Department> departments = (List<Department>) template.getForObject("http://localhost:8081/getAllDepartment", Department.class); 
 		
-		ResponseEntity<List<Department>> deptResponse = template.exchange("http://department-service/getAllDepartment",
+		ResponseEntity<List<Department>> deptResponse = template.exchange("http://13.86.184.32:8880/getAllDepartment",
 				HttpMethod.GET, null, new ParameterizedTypeReference<List<Department>>() {
 				}); 
 		
 		List<Department> departments=deptResponse.getBody();
 		// List<Employee> employees=getEmployees();
-		ResponseEntity<List<Address>> addressResponse = template.exchange("http://address-service/getAllAddress",
+		ResponseEntity<List<Address>> addressResponse = template.exchange("http://13.86.249.232:8881/getAllAddress",
 				HttpMethod.GET, null, new ParameterizedTypeReference<List<Address>>() {
 				}); 
 		List<Address> addressList=addressResponse.getBody();
@@ -79,26 +80,15 @@ public class EmployeeController {
 	
 	@GetMapping("/")
 	public String getHello() {
-		return "hello world";
+		return "hello world second build";
 	}
 	
 	public List<Employee> createEmployees(){
-		employeeList.addAll(Arrays.asList(
-				new Employee("1", "Naresh", 11, 22),
-				new Employee("2", "Ramesh", 11, 23),
-				new Employee("3", "Suresh", 13, 21)
-				));
 		
-		for (Employee employee : employeeList) {
-			repository.save(employee);
-		}
+		
 		
 		List<Employee> result = (List<Employee>) repository.findAll();
-		employeeList.addAll(result);
-		
-		employeeSet=new HashSet<Employee>(employeeList);
-		employeeList.clear();
-		 employeeList.addAll(employeeSet);
+		employeeList=result;
 		return employeeList;		
 	}
 	
@@ -142,19 +132,14 @@ public class EmployeeController {
 	
 	@GetMapping("employeeByDept/{deptid}")
 	public List<Employee> getEmployeesBYdept(
-			@PathVariable("deptid") String deptid
+			@PathVariable("deptid") Integer deptid
 			) {
 		//Integer deptId=Integer.parseInt(deptid);
 		//template.exchange("http://employee-Service/getAllEmployee", HttpMethod.GET, null, new ParameterizedTypeReference<List<EmployeeTo>>() {});
-		getAllEmployee();
-		List<Employee> empList=new ArrayList<Employee>();
-		for (Employee employee : employeeList) {
-			if(employee.getDeptid().equals(Integer.parseInt(deptid))) {
-				empList.add(employee);
-			}
-		}
+		createEmployees();	
+		return employeeList.stream().filter(emp -> emp.getDeptid().equals(deptid)).collect(Collectors.toList());
 		
-		return empList;
+		
 		
 	}
 }

@@ -1,6 +1,5 @@
-package com.Employee.EmployeeService;
+package com.Employee;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 import com.Employee.Model.Employee;
@@ -19,7 +16,6 @@ import com.Employee.Repository.EmployeeRepository;
 import com.microsoft.azure.spring.data.cosmosdb.repository.config.EnableDocumentDbRepositories;
 
 @SpringBootApplication
-@ComponentScan("com.Employee")
 @EnableEurekaClient
 @EnableDocumentDbRepositories(basePackages = "com.Employee.Repository")
 public class EmployeeServiceApplication {
