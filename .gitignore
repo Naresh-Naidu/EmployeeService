@@ -1,3 +1,6 @@
+mvnw
+mvnw.cmd
+Micorsoft.Azure.Documents.ServiceInterop.dll
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
